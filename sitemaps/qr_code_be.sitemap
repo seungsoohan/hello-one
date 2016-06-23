@@ -1,0 +1,26 @@
+sitemap Inthecore label="AMBASSADOR"
+{
+  /*Frame label="One Scape"{
+    Group item=Knx label="블라인드" icon="awning_one"
+    Group item=Hue label="전구" icon="bulb_one"
+    }*/
+  Frame label="One Scape" {
+  Switch item=Blind_left label="블라인드" mappings=[UP="UP", STOP="", DOWN="DOWN"] icon="awning_one"
+  Switch item=Awning label="어닝" mappings=[UP="UP", STOP="", DOWN="DOWN"]  icon="awning_one"
+
+  /*Switch item=hue_light label="Hue" mappings=[OFF="OFF", ON="ON"] icon="switch_one"
+  Colorpicker item=hue_color label="Color" icon="color_one"*/
+
+  Switch item=lifx_cafe mappings=[ON="on", OFF="off"] icon="switch_one"
+
+  Colorpicker item=Color_lifx1 label="Color" icon="color_one"
+  Switch item=Sonos3_playpause mappings=[ON="play", OFF="Pause"] icon="sonos_one"
+  Switch item=SonosBar_playpause mappings=[ON="play", OFF="Pause"] icon="sonos_one"
+  Switch item=Sonos5_playpause mappings=[ON="play", OFF="Pause"] icon="sonos_one"
+  }
+
+  Frame{
+    Image url="http://192.168.35.194:8080/images/ambassador_one.png" height=5 label="onescape" refresh=20000
+  }
+
+  }

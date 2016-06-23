@@ -1,0 +1,217 @@
+Group All
+Group GF     (All)
+Group FF     (All)
+Group Awning (All)
+Group MyOpenHAB
+Group YE (All)
+
+Group GF_Hall "Light" <office>  (GF)
+
+Group GF_Blind "Blind , Awning " <office>  (GF)
+
+Group GF_Test "TEST" <office>  (GF)
+
+
+Group FF_Cafe "카페" <office>  (FF)
+
+Group Light_ye "Light"   <bulb_one> (YE)
+Group Awning_ye "Awning" <awning_one> (YE)
+Group Music_ye "Music"  (YE)
+Group Camera_ye "Camera" <camera_one> (YE)
+
+Number   Azimuth        "Azimuth [%.2f]"          (GF_Blind, Awning)    {astro="planet=sun, type=position, property=azimuth"}
+Rollershutter Awning_red "어닝_Red" (GF_Blind) { knx="0/2/12,0/2/13" }
+/*노란코끼리*/
+
+Color Color1 "Table 1" <slider> (YE)
+Switch ye_switch "스위치" (YE) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on&color=white&brightness=1{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] <[https://api.lifx.com/v1/lights/label:D5{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}:30000:JS(lifx_power.js)]"}
+Switch ye_police_light "방범" (YE)
+Switch test "test" (YE)
+
+/* perference */
+
+Switch awning_automode "자동모드" (YE)
+Switch awning_daylight "주간작동모드" (YE)
+
+Number awning_rainmode "Awning Rain Mode" (YE)
+Number awning_windmode "Awning Wind Mode" (YE)
+Number awning_snowmode (YE)
+
+
+
+
+/*weather binding */
+
+String   Condition           "Condition [%s]"                               <sun_clouds>    (GF_Blind, GF_Test)      {weather="locationId=IoTGallery, type=condition, property=text"}
+String   Condition_ID     "Condition id [%s]"   (GF_Blind)  {weather="locationId=IoTGallery, type=condition, property=id"}
+
+Number          Weather_Temperature     "Outside Temperature [%.0f] °C" <temperature>  (GF_Blind) { weather="locationId=IoTGallery, type=temperature, property=current" }
+
+Number   Temp_Feel        "Temperature feel [%.2f °C]" (GF_Blind, GF_Test)  {weather="locationId=IoTGallery, type=temperature, property=feel"}
+Number   Humidity         "Humidity [%d %%]"   (GF_Blind)   {weather="locationId=IoTGallery, type=atmosphere, property=humidity"}
+Number   Rain_today          "Rain today [%.2f mm/h]"  (GF_Blind, GF_Test) {weather="locationId=IoTGallery, forecast=0, type=precipitation, property=rain"}
+Number   Rain_tomorrow          "Rain tomorrw [%.2f mm/h]"  (GF_Blind) {weather="locationId=IoTGallery, forecast=1, type=precipitation, property=rain"}
+Number   Snow_today          "Snow today [%.2f mm/h]"   {weather="locationId=IoTGallery, forecast=0, type=precipitation, property=snow"}
+
+Number   Wind_Speed           "Windspeed [%.2f mps]"   (GF_Blind) {weather="locationId=IoTGallery, type=wind, property=speed, unit=mps"}
+Number   Wind_Gust_Mps        "Wind gust 돌풍 [%.2f mps]"  (GF_Blind)   {weather="locationId=IoTGallery, type=wind, property=gust, unit=mps"}
+DateTime        Weather_LastUpdate "Last Update [%1$ta %1$tr]" (GF_Blind)          <clock>
+
+
+
+
+/*astro binding */
+
+
+DateTime Sunrise_Time  "Sunrise [%1$tH:%1$tM]"  (GF_Blind, Awning)   {astro="planet=sun, type=rise, property=start"}
+DateTime Sunset_Time   "Sunset [%1$tH:%1$tM]"   (GF_Blind, Awning)   {astro="planet=sun, type=set, property=end"}
+String Season_Name     "Season [%s]"            (GF_Blind)    {astro="planet=sun, type=season, property=name"}
+/*Number   Azimuth        "Azimuth [%.2f]"          (GF_Blind, Awning)    {astro="planet=sun, type=position, property=azimuth"}*/
+Number   Elevation      "Elevation [%.2f]"            (GF_Blind)   {astro="planet=sun, type=position, property=elevation"}
+
+
+Switch is_sunset
+
+/* gpio test */
+
+/*
+
+Switch blind_gpio_down "gpio down" (GF_Test) {gpio="pin:17 activelow:yes"}
+Switch blind_gpio_up "gpio up" (GF_Test) {gpio="pin:27 activelow:yes"}
+Switch blind_gpio_stop "gpio stop" (GF_Test) {gpio="pin:18 activelow:yes"}
+
+Rollershutter blind_gpio_total "통합조절" (GF_Test)
+Rollershutter blind_gpio_slat "슬랫조절" (GF_Test)
+
+
+*/
+
+
+*/
+
+
+
+/*
+Group:Switch:OR(ON, OFF) GroupSwitchTop "Top Lights[(%d)]" (GF_Hall, Lights)
+Group:Switch:OR(ON, OFF) GroupSwitchMid "Mid Lights[(%d)]" (GF_Hall, Lights)
+Group:Switch:OR(ON, OFF) GroupSwitchBottom "Bottom Lights[(%d)]" (GF_Hall, Lights)
+Group:Switch:OR(ON, OFF) GAll "Hall[(%d)]" (GF_Hall, Lights)
+*/
+/*
+
+
+/* hue Lighting */
+Switch Toggle_1 "Bulb 1" (GroupSwitchTop, GAll) {hue="26"}
+Switch Toggle_2 "Bulb 2" (GroupSwitchTop, GAll) {hue="27"}
+Switch Toggle_3 "Bulb 3" (GroupSwitchTop, GAll) {hue="28"}
+
+/*10~14*/
+Switch Toggle_10 "Bulb 10" (GroupSwitchBottom, GAll) {hue="10"}
+Switch Toggle_11 "Bulb 11" (GroupSwitchBottom, GAll) {hue="11"}
+Switch Toggle_12 "Bulb 12" (GroupSwitchBottom, GAll) {hue="12"}
+Switch Toggle_13 "Bulb 13" (GroupSwitchBottom, GAll) {hue="13"}
+Switch Toggle_14 "Bulb 14" (GroupSwitchBottom, GAll) {hue="14"}
+/*29~38*/
+Switch Toggle_29 "Bulb 29" (GroupSwitchMid, GAll) {hue="29"}
+Switch Toggle_30 "Bulb 30" (GroupSwitchMid, GAll) {hue="30"}
+Switch Toggle_31 "Bulb 31" (GroupSwitchMid, GAll) {hue="31"}
+Switch Toggle_32 "Bulb 32" (GroupSwitchMid, GAll) {hue="32"}
+Switch Toggle_33 "Bulb 33" (GroupSwitchMid, GAll) {hue="33"}
+Switch Toggle_34 "Bulb 34" (GroupSwitchMid, GAll) {hue="34"}
+Switch Toggle_35 "Bulb 35" (GroupSwitchMid, GAll) {hue="35"}
+Switch Toggle_36 "Bulb 36" (GroupSwitchMid, GAll) {hue="36"}
+Switch Toggle_37 "Bulb 37" (GroupSwitchMid, GAll) {hue="37"}
+Switch Toggle_38 "Bulb 38" (GroupSwitchMid, GAll) {hue="38"}
+*/
+
+
+
+/*
+
+
+Switch Hall_Light "123123" (GF_Hall) {hue="1"}
+Switch Light_GF_Gallery_Hall 	"huelight" 		(GF_Hall, Light) {hue="6"}
+
+/*#Switch Light_GF_Gallery_Hall2 	"lightstrip2 " 		(GF_Hall, Lights) {hue="27"}*/
+
+Color hue_color_Test2 		"Color" 		(GF_Test, Lights) {hue="13"}
+Color hue_color_Test3 		"Color3" 		(GF_Test, Lights)
+
+*/
+
+/* lifx test*/
+
+Switch lifx_cafe "Lifx" (FF_Cafe) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] <[https://api.lifx.com/v1/lights/all{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}:30000:JS(lifx_power.js)]"}
+
+Switch lifx_cafe_test "Lifx_T" (GF_Test) {http=">[ON:PUT:https://api.lifx.com/v1/lights/label:D5/state?power=on&color=green{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/label:D5/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] <[https://api.lifx.com/v1/lights/label:D5{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}:30000:JS(lifx_power.js)]"}
+
+Color lifx_color_test "color test" (GF_Test)
+
+/*Switch Sensibo_power "Sensibo Control" (GF_Test)*/
+
+
+/*sonos
+#  RINCON_5CAAFD51A67E01400    --sonos3
+#  RINCON_5CAAFD0AF9DC01400    --sonos5
+#  RINCON_5CAAFD1D6DD901400    --sonos bar
+*/
+
+
+Switch SonosBar_playpause "Sonos Bar" (FF_Cafe) {sonos="[ON:RINCON_5CAAFD1D6DD901400:play],[OFF:RINCON_5CAAFD1D6DD901400:pause]"}
+Switch Sonos3_playpause "Sonos 3"(FF_Cafe) {sonos="[ON:RINCON_5CAAFD51A67E01400:play],[OFF:RINCON_5CAAFD51A67E01400:pause]"}
+Switch Sonos5_playpause "Sonos 5"(FF_Cafe) {sonos="[ON:RINCON_5CAAFD0AF9DC01400:play],[OFF:RINCON_5CAAFD0AF9DC01400:pause]"}
+Dimmer VolumeSonos "Sonos Volume" {sonos="[RINCON_5CAAFD1D6DD901400:volume]"}
+String SonosTrack {sonos="[RINCON_5CAAFD51A67E01400:currenttrack]"}
+
+
+String sonosMusic_ba "Sonos Music"{sonos="[RINCON_5CAAFD1D6DD901400:favorite]"}
+
+
+
+/* ring with ifttt */
+Switch ring_front_door_motion "Ring Front Door Motion" (MyOpenHAB) {}
+Switch ring_front_door_ring "Ring Front Door Ring" (MyOpenHAB) {}
+
+
+Group:Rollershutter:OR(UP, DOWN, STOP) gBlind_All "All Blind [(%d)]" <rollershutter> (GF_Blind)
+
+/* knx binding */
+
+Rollershutter Blind_right "창 우측" (GF_Blind, gBlind_All) { knx="0/2/8,0/2/9" }
+Rollershutter Blind_tv_left "TV좌측" (GF_Blind, gBlind_All) { knx="0/2/10,0/2/11" }
+
+
+Rollershutter Blind_left "Left Blind [%s]" (GF_Blind, gBlind_All) {knx="0/2/0, 0/2/1"}
+
+
+
+Rollershutter Blind_Right_Top "Right Top Blind [%s]" (GF_Blind, gBlind_All) {knx="0/2/2,0/2/3"}
+Rollershutter Blind_Mid "Mid Blind [%s]" (GF_Blind, gBlind_All) {knx="0/2/4,0/2/5"}
+
+Rollershutter Blind_left_020 "블라인드020 [%s]" (GF_Blind) {knx="0/2/0"}
+Rollershutter Blind_left_021 "블라인드021 [%s]" (GF_Blind) {knx="0/2/1"}
+Rollershutter Blind_left_022 "블라인드022 [%s]"  {knx="0/2/2"}
+Rollershutter Blind_left_023 "블라인드023 [%s]"  {knx="0/2/3"}
+
+Rollershutter bl_test
+Rollershutter bl_test_button
+
+Switch bl_1 "bl1" (GF_Blind) {knx="0/2/1"}
+
+Switch blind_cur_state (GF_Test)
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* sensibo binding */
+
+/*Switch Sensibo_power "Sensibo Control" (GF_Blind)*/

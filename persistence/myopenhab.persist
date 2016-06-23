@@ -1,0 +1,14 @@
+Strategies {
+    default = everyChange
+}
+Items {
+    * : strategy = everyChange
+}
+
+Strategies {
+        default = everyUpdate
+}
+Items {
+        // persist all items every hour and on every change
+        MyOpenHAB* : strategy = everyUpdate
+}

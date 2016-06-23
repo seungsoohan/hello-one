@@ -1,0 +1,19 @@
+Group All
+Group Knx     (All)
+Group Hue (All)
+
+
+
+
+Rollershutter Awning "어닝_Red" (GF_Blind) { knx="0/2/12,0/2/13" }
+Rollershutter Blind_left "Left Blind [%s]" (GF_Blind, gBlind_All) {knx="0/2/0, 0/2/1"}
+
+/*Switch hue_light 	"huelight" 		{hue="1"}
+Color hue_color 		"Color" 	 {hue="13"}*/
+
+Color Color_lifx1 "Table 1"
+
+Switch lifx_cafe "Lifx"  {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] <[https://api.lifx.com/v1/lights/all{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}:30000:JS(lifx_power.js)]"}
+Switch SonosBar_playpause "Sonos Bar"  {sonos="[ON:RINCON_5CAAFD1D6DD901400:play],[OFF:RINCON_5CAAFD1D6DD901400:pause]"}
+Switch Sonos3_playpause "Sonos 3" {sonos="[ON:RINCON_5CAAFD51A67E01400:play],[OFF:RINCON_5CAAFD51A67E01400:pause]"}
+Switch Sonos5_playpause "Sonos 5" {sonos="[ON:RINCON_5CAAFD0AF9DC01400:play],[OFF:RINCON_5CAAFD0AF9DC01400:pause]"}

@@ -1,0 +1,11 @@
+rule "lifx change color with color picker"
+  when Item Color_lifx1 received command
+    then
+      var String lifxurl_all = "https://api.lifx.com/v1/lights/all/state"
+      var String lifxtoken = "c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71"
+      var HSBType intCol = (Color_lifx1.state as HSBType)
+      var int hue_value = intCol.hue.intValue
+      var String commandString_final = "curl@@-XPUT@@" + lifxurl_all + "@@-H@@Authorization: Bearer " + lifxtoken + "@@-d@@" + "power=on&brightness=" + (intCol.value.floatValue/100.0).toString + "&color=saturation:" +(intCol.saturation.floatValue/100.0).toString + " hue:"  + intCol.hue.intValue.toString
+
+      executeCommandLine(commandString_final)
+end

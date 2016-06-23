@@ -1,0 +1,3 @@
+sendCommand(Blind_left_020, UP)
+Thread::sleep(150)
+sendCommand(Blind_left_021, DOWN)

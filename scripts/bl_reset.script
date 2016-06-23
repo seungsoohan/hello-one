@@ -1,0 +1,19 @@
+/*  슬랫 중간으로 조절  */
+
+
+sendCommand(Blind_left, DOWN)
+
+
+Thread::sleep(1200)
+
+
+sendCommand(Blind_left, UP)
+
+
+Thread::sleep(1700)
+
+sendCommand(Blind_left, STOP)
+
+
+/*sendCommand(blind_cur_state, ON)*/
+  /*블라인드가 올라가있는지 내려가있는지 확인*/

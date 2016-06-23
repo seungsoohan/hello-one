@@ -1,0 +1,99 @@
+sitemap Inthecore label="IoT Gallery"
+{
+  Frame label="One App"{
+    Group item=GF label="Gallery" icon="garage_one"
+    Group item=FF label="IoTCafe" icon="garage_one"
+    Group item=Awning label="Awning" icon="awning_one"
+    Group item=YE label="노란코끼리" icon="pet_one"{
+    Switch item=awning_automode label="자동모드" mappings=[ON="On", OFF="Off"]
+      Switch item=awning_daylight label="주간작동모드" mappings=[ON="On", OFF="Off"]
+      Selection item=awning_rainmode label="비 감지" mappings=[0="Off", 1="Auto"]
+      Selection item=awning_snowmode label="눈 감지" mappings=[0="Off", 1="Auto"]
+      Selection item=awning_windmode label="바람 감지" mappings=[0="Off", 1="Auto", 2="8m/s이상", 3="10m/s이상", 4="12m/s이상"]
+
+      Switch item=test label="테스트버튼"
+    }
+    }
+
+
+
+
+
+
+  Frame {
+
+Switch item=Blind_left label="블라인드" mappings=[UP="UP", STOP="", DOWN="DOWN"]
+Switch item=bl_test label="슬랫" mappings=[UP="UP", STOP="", DOWN="DOWN"]
+
+
+
+
+Text item=Azimuth
+
+/* 어닝  */
+
+
+/*Switch item=Awning_automode  mappings=[OFF="OFF", ON="ON"]    오토모드*/
+
+
+/*Switch item=Hall_Ligh label="11"*/
+/*
+Switch item=GAll mappings=[OFF="OFF", ON="ON"]
+Switch item=GroupSwitchTop mappings=[OFF="OFF", ON="ON"]
+Switch item=GroupSwitchMid mappings=[OFF="OFF", ON="ON"]
+Switch item=GroupSwitchBottom mappings=[OFF="OFF", ON="ON"]
+
+Switch item=gBlind_All mappings=[UP="UP", STOP="X", DOWN="DOWN"]
+*/
+
+
+/*hue*/
+
+
+
+/*lifx*/
+
+
+Switch item=lifx_cafe mappings=[ON="on", OFF="off"]
+
+/*Switch item=lifx_cafe_test mappings=[ON="on", OFF="off"]*/
+
+
+
+
+
+/*sonos*/
+
+Switch item=Sonos3_playpause mappings=[ON="play", OFF="Pause"]
+Switch item=SonosBar_playpause mappings=[ON="play", OFF="Pause"]
+Switch item=Sonos5_playpause mappings=[ON="play", OFF="Pause"]
+Slider item=VolumeSonos
+/*Text item=SonosTrack label="Track: [%s]"*/
+
+
+
+
+
+/*
+Switch item=Sonos_next mappings=[ON="next"]
+Switch item=sono3
+Switch item=sono5 mappings=[ON="play", OFF="Pause"]
+Switch item=sonoba  mappings=[ON="play", OFF="Pause"]
+*/
+
+
+}
+
+
+  Frame label="Home" icon="house" {
+
+
+  }
+
+
+
+
+
+
+
+}

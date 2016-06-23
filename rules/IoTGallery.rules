@@ -1,0 +1,449 @@
+import org.joda.time.*
+import org.openhab.model.script.actions.Timer
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.openhab.core.library.types.HSBType
+
+
+import java.util.Date
+import java.util.Calendar
+
+import org.joda.time.*
+
+rule "blind reset"
+when
+  Item bl_test received command STOP
+then
+    callScript("bl_reset")
+end
+
+
+rule "bl_test_button_down"
+  when Item bl_test received command DOWN
+then
+callScript("bl_down")
+end
+
+
+rule "bl_test_button_UP"
+  when Item bl_test received command UP
+then
+  callScript("bl_up")
+end
+
+
+rule "lifx change color with color picker"
+when Item Color1 received command
+then
+
+var String lifxurl_all = "https://api.lifx.com/v1/lights/all/state"
+var String lifxtoken = "c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71"
+
+
+  var HSBType intCol = (Color1.state as HSBType)
+var int hue_value = intCol.hue.intValue
+
+var String commandString_final = "curl@@-XPUT@@" + lifxurl_all + "@@-H@@Authorization: Bearer " + lifxtoken + "@@-d@@" + "power=on&brightness=" + (intCol.value.floatValue/100.0).toString + "&color=saturation:" +(intCol.saturation.floatValue/100.0).toString + " hue:"  + intCol.hue.intValue.toString    /*+ "color=hue:" + intCol.hue.intValue.toString + "@@saturation:" + (intCol.saturation.floatValue/100.0).toString + "&brightness=" + (intCol.value.floatValue/100.0).toString*/
+
+executeCommandLine(commandString_final)
+end
+
+
+
+rule "lifx police light"
+  when Item ye_police_light received command ON
+then
+  var String lifxurl_all = "https://api.lifx.com/v1/lights/all/effects/pulse"
+  var String lifxtoken = "c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71"
+  var String commandString = "curl@@-XPOST@@" + lifxurl_all + "@@-H@@Authorization: Bearer " + lifxtoken + "@@-d@@" + "period=1&cycles=10&color=red&from_color=blue"
+
+  executeCommandLine(commandString)
+
+
+
+
+rule "Change Hue Color"
+  when Item hue_color_Test received update
+then
+  var color_value = hue_color_Test.state as HSBType
+  sendCommand(Toggle_1, color_value)
+  sendCommand(Toggle_2, color_value)
+  sendCommand(Toggle_3, color_value)
+end
+
+
+
+
+
+rule "awning aaa"
+/*  when Item Azimuth changed*/
+/*  when Time cron "0/30 * * * * ?"*/
+  /*  when Item test changed*/
+
+    then
+    /*  var int azimuth = (Azimuth.state as DecimalType).intValue
+      var int my_position = 195     */
+
+/*
+      var int awning_start = my_position - 90
+      var int awning_end = my_position + 90
+
+      if(awning_start < 0){awning_start = my_position + 270}
+      if(awning_end > 360){awning_end = my_position - 270}
+
+      var String weather_id = Condition_ID.state
+
+    /*  var int rain_value = (Rain_today.state as DecimalType).intValue
+      var int snow_value = (Snow_today.state as DecimalType).intValue
+      var int wind_value = (Wind_Speed.state as DecimalType).intValue*/
+
+/*for debug*/
+
+/*    String   Condition_ID     "Condition id [%s]"   (GF_Blind)  {weather="locationId=IoTGallery, type=condition, property=id"}   */
+
+      var boolean rain_warning = false
+      var boolean rain_caution = false
+      var boolean snow_warning = false
+      var boolean snow_caution = false
+      var boolean wind_warning = false
+      var boolean sun_visible = false
+      var boolean total_warning = false
+      var int rainmode_value = (awning_rainmode.state as DecimalType).intValue
+      var int windmode_value = (awning_windmode.state as DecimalType).intValue
+      var int snowmode_value = (awning_snowmode.state as DecimalType).intValue
+
+/* for debug */
+/*weather_id = "0"*/
+
+      if(weather_id=="0" || weather_id=="1" || weather_id=="2" || weather_id=="3" || weather_id=="4" ||
+         weather_id=="23" || weather_id=="41" || weather_id=="42" || weather_id=="43" || weather_id=="45" || weather_id=="46" || weather_id=="47"  )
+         {
+          total_warning = true
+         }
+
+      if(awning_automode.state == OFF && !total_warning)          {return false}
+
+      if(weather_id=="5" || weather_id=="6" || weather_id=="10" || weather_id=="11" || weather_id=="12" ||
+         weather_id=="17" || weather_id=="35" || weather_id=="40" ){
+         rain_caution = true
+         }
+
+      if(weather_id=="5" || weather_id=="6" || weather_id=="10" || weather_id=="11" || weather_id=="12" ||
+         weather_id=="17" || weather_id=="35" || weather_id=="40" ||
+         weather_id=="24" || weather_id=="37" || weather_id=="38" || weather_id=="39"){
+         rain_caution = true
+         }
+
+
+      if(weather_id=="7" || weather_id=="13" || weather_id=="14" || weather_id=="15" || weather_id=="16" ||
+           weather_id=="18" || weather_id=="42"){
+           snow_caution = true
+               }
+
+      if(rainmode_value==1 && rain_caution)   {rain_warning = true}
+      if(snowmode_value==1 && snow_caution)   {snow_warning = true}
+
+
+
+
+      if(windmode_value==0)                     {rain_warning = false}
+      if(wind_value>10 && windmode_value==1)     {rain_warning = true}
+      if(wind_value>8 && windmode_value==2)     {rain_warning = true}
+      if(wind_value>10 && windmode_value==3)    {rain_warning = true}
+      if(wind_value>12 && windmode_value==4)    {rain_warning = true}
+
+/*test*/
+/*rain_warning = true*/
+
+var DateTime daystart = new DateTime((Sunrise_Time.state as DateTimeType).calendar.timeInMillis)
+var DateTime dayend = new DateTime((Sunset_Time.state as DateTimeType).calendar.timeInMillis)
+
+/*
+if(now.isAfter(daystart)){
+  sendCommand(blind_gpio_total, UP)
+}
+else{sendCommand(blind_gpio_total, DOWN)}
+*/
+
+      if (rain_warning || wind_warning || snow_warning)     {total_warning = true}
+
+      if(awning_daylight.state == ON){
+          if(now.isAfter(daystart) && now.isBefore(dayend) && !total_warning){
+              sendCommand(Awning_red, DOWN)
+          }
+          else
+              {sendCommand(Awning_red, UP)}
+      }
+
+      else{
+              if(now.isAfter(daystart) && azimuth<awning_end ){
+                  sun_visible = true
+              }
+              if(azimuth>awning_start && now.isBefore(dayend)){
+                  sun_visible = true
+              }
+
+
+              if(sun_visible && !total_warning)
+                {sendCommand(Awning_red, DOWN)}
+              else  {sendCommand(Awning_red, UP)}
+
+      }*/
+end
+
+
+
+
+/*
+
+
+rule "awning red"
+when
+  Item Azimuth changed
+then
+
+
+      var int azimuth = (Azimuth.state as DecimalType).intValue
+      var int my_position = 195
+      var int awning_start = my_position - 90
+      var int awning_end = my_position + 90
+
+
+      if(awning_start < 0){awning_start = my_position + 270}
+      if(awning_end > 360){awning_end = my_position - 270}
+
+      var int rain_value = (Rain_today.state as DecimalType).intValue
+      var int snow_value = (Snow_today.state as DecimalType).intValue
+      var int wind_value = (Wind_Speed.state as DecimalType).intValue
+
+      var boolean rain_warning = false
+      var boolean snow_warning = false
+      var boolean wind_warning = false
+      var boolean sun_visible = false
+      var boolean total_warning = false
+
+
+      if(Awning_selfmode.state == ON){
+        return false}
+
+      if(rain_value > 20 && Rain_mode.state==OFF){
+          rain_warning = true}
+
+      if(wind_value > 10){
+          rain_warning = true}
+
+      if(snow_value > 8){
+          snow_warning = true}
+
+      if(awning_start<azimuth && awning_end>azimuth){
+          sun_visible = true
+          sendCommand(is_sunset, OFF)
+      }
+      else {sun_visible = false
+            sendCommand(is_sunset, ON)}
+
+
+      if(Condition_ID.state == "28"){
+          sun_visible = false
+          /*sendCommand(Awning_red, UP)*/
+      }
+
+      if (rain_warning || wind_warning || snow_warning){
+          total_warning = true
+          /*sendCommand(Awning_red, UP)*/
+      }
+/*  now.isAfter((Sunrise_Time.state as DateTimeType).calendar.timeInMillis  계절에 따라 변수로 둬야할듯   */
+/*total_warning = true*/
+
+
+      if(sun_visible && !total_warning)
+            {sendCommand(Awning_red, DOWN)}
+      else  {sendCommand(Awning_red, UP)}
+
+
+end
+*/
+
+
+
+
+
+
+rule "blind_gpio_up"
+  when Item blind_gpio_total received command UP
+then
+if(blind_gpio_down.state==ON){
+    sendCommand(blind_gpio_up, ON)
+    Thread::sleep(200)
+    sendCommand(blind_gpio_down, OFF)
+    sendCommand(blind_gpio_up, OFF)
+    Thread::sleep(200)
+    sendCommand(blind_gpio_up, ON)
+}
+
+  sendCommand(blind_gpio_up, ON)
+  sendCommand(blind_gpio_down, OFF)
+
+end
+
+rule "blind_gpio_down"
+  when Item blind_gpio_total received command DOWN
+then
+  if(blind_gpio_up.state==ON){
+      sendCommand(blind_gpio_down, ON)
+      Thread::sleep(200)
+      sendCommand(blind_gpio_up, OFF)
+      sendCommand(blind_gpio_down, OFF)
+      Thread::sleep(200)
+      sendCommand(blind_gpio_down, ON)
+  }
+
+  sendCommand(blind_gpio_down, ON)
+  sendCommand(blind_gpio_up, OFF)
+end
+
+rule "blind_gpio_stop"
+  when Item blind_gpio_total received command STOP
+then
+
+if(blind_gpio_up.state == ON){
+sendCommand(blind_gpio_down, ON)
+}
+
+else if(blind_gpio_down.state == ON){
+sendCommand(blind_gpio_up, ON)
+}
+  Thread::sleep(500)
+  sendCommand(blind_gpio_up, OFF)
+  sendCommand(blind_gpio_down, OFF)
+end
+
+rule "blind_gpio_slat_up"
+  when Item blind_gpio_slat received command UP
+then
+  sendCommand(blind_gpio_up, ON)
+  Thread::sleep(300)
+  sendCommand(blind_gpio_down, ON)
+  Thread::sleep(500)
+
+  sendCommand(blind_gpio_up, OFF)
+  sendCommand(blind_gpio_down, OFF)
+end
+
+rule "blind_gpio_slat_down"
+  when Item blind_gpio_slat received command DOWN
+then
+  sendCommand(blind_gpio_down, ON)
+  Thread::sleep(300)
+  sendCommand(blind_gpio_up, ON)
+  Thread::sleep(500)
+
+  sendCommand(blind_gpio_up, OFF)
+  sendCommand(blind_gpio_down, OFF)
+end
+
+
+
+rule "Blind Slat Auto Control"
+/*whenItem Azimuth  changed*/
+/*  when Time cron "0 0/5 * * * ?" or
+  Item is_sunset changed from OFF to ON*/
+
+    then
+
+          var int azimuth = (Azimuth.state as DecimalType).intValue
+          var int elevation = (Elevation.state as DecimalType).intValue
+          var int my_position = 195
+          var int awning_start = my_position - 90
+          var int awning_end = my_position + 90
+          var int awning_start_pre = my_position - 95
+
+          var int rain_value = (Rain_today.state as DecimalType).intValue
+          var int snow_value = (Snow_today.state as DecimalType).intValue
+          var int wind_value = (Wind_Speed.state as DecimalType).intValue
+
+          var boolean wind_warning = false
+          var boolean sun_visible = false
+          var boolean total_warning = false
+
+
+
+
+          if(wind_value > 10){
+              rain_warning = true}
+
+          if(awning_start<azimuth && azimuth<awning_end){
+              sun_visible = true}
+          else {sun_visible = false}
+
+          if(Condition_ID.state == "28"){
+              sun_visible = false}
+
+          if(sun_visible && blind_cur_state.state == OFF){
+          sendCommand(Blind_left, DOWN)
+          Thread::sleep(20000)}
+
+          if(sun_visible && elevation<30)
+            {callScript("bl_reset")}
+
+          else if(sun_visible && elevation<45)
+            {callScript("bl_reset")
+            createTimer(now.plusSeconds(2)) [|
+              callScript("bl_down")
+              ]}
+
+          else if(sun_visible && elevation<65){
+          callScript("bl_reset")
+          createTimer(now.plusSeconds(2)) [|
+            callScript("bl_down")
+            callScript("bl_down")
+            ]}
+
+          else if(sun_visible && elevation<80){
+          callScript("bl_reset")
+          createTimer(now.plusSeconds(2)) [|
+            callScript("bl_down")
+            callScript("bl_down")
+            callScript("bl_down")
+          ]}
+
+          else {
+          sendCommand(Blind_left, UP)
+          sendCommand(blind_cur_state, OFF)}
+
+end
+
+
+
+
+
+
+
+/*
+rule ring_startup
+when
+  System started
+then
+  sendCommand(ring_front_door_motion, OFF)
+  sendCommand(ring_front_door_ring, OFF)
+end
+
+rule ring_front_door_motion
+when
+  Item ring_front_door_motion changed to ON
+then
+  createTimer(now.plusSeconds(30)) [|
+    sendCommand(ring_front_door_motion, OFF)
+  ]
+end
+
+rule ring_front_door_ring
+when
+  Item ring_front_door_ring changed to ON
+then
+  createTimer(now.plusSeconds(30)) [|
+    sendCommand(ring_front_door_ring, OFF)
+  ]
+end
+*/

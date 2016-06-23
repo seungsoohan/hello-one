@@ -1,0 +1,32 @@
+var int my_position = 204
+var int azimuth = (Azimuth.state as DecimalType).intValue
+
+var int awning_start = my_position - 90
+var int awning_end = my_position + 90
+
+var int rain_value = (Rain_today.state as DecimalType).intValue
+var int wind_value = (Wind_Speed.state as DecimalType).intValue
+
+var boolean rain_warning = true
+var boolean wind_warning = false
+
+if(rain_value > 20){
+    rain_warning = true
+}
+
+if(wind_value > 10){
+    rain_warning = true
+}
+
+if(rain_warning || wind_warning){
+    sendCommand(Awning_red, UP)
+}
+
+else if(azimuth > awning_start && now.isAfter((Sunrise_Time.state as DateTimeType).calendar.timeInMillis)){
+sendCommand(Awning_red, DOWN)
+/*sendCommand(Blind_tv_left, UP)*/
+
+}
+else if(azimuth > awning_end   ){
+sendCommand(Awning_red, UP)
+}

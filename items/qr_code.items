@@ -1,0 +1,109 @@
+Group All
+Group Yellow (All)
+
+Group Light_ye "Light"   <bulb_one> (Yellow)
+Group Awning_ye "Awning" <awning_one> (Yellow)
+Group Blind_ye "Awning" <awning_one> (Yellow)
+Group Music_ye "Music"  <sonos_one> (Yellow)
+Group Camera_ye "Camera" <camera_one> (Yellow)
+
+Group Preference "설정" (All)
+
+Group All_light "All light"
+
+/* perference */
+
+Switch awning_automode "자동모드"
+
+
+
+Switch awning_rainmode "Awning Rain Mode"
+
+Number awning_windmode "Awning Wind Mode"
+Number awning_day "Awning day Mode"
+
+Switch awning_snowmode
+
+Switch test_arn
+Number azimu_set "방위각 세팅"
+
+
+
+
+
+
+/*  lifx  */
+
+Color Color_lifx "Color"  (Light_ye)
+Switch ye_switch "스위치" (Light_ye) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on&color=white&brightness=1{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] "}
+Switch ye_police_light "방범" (Light_ye)
+
+Switch ye_switch1 "T1" (All_light) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on&color=white&brightness=1{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] "}
+Switch ye_switch2 "T2" (All_light) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on&color=white&brightness=1{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] "}
+Switch ye_switch3 "T3" (All_light) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on&color=white&brightness=1{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] "}
+Switch ye_switch4 "T4" (All_light) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on&color=white&brightness=1{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] "}
+Switch ye_switch5 "T5" (All_light) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on&color=white&brightness=1{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] "}
+Switch ye_switch6 "T6" (All_light) {http=">[ON:PUT:https://api.lifx.com/v1/lights/all/state?power=on&color=white&brightness=1{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] >[OFF:PUT:https://api.lifx.com/v1/lights/all/state?power=off{Authorization=Bearer c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71}] "}
+
+
+/* hue */
+
+Switch hue_ff_1 "Bulb 1"  {hue="26"}
+Switch hue_ff_2 "Bulb 2"  {hue="27"}
+Switch hue_ff_3 "Bulb 3"  {hue="28"}
+
+
+
+
+/*knx*/
+
+
+Rollershutter Blind_right "창 우측"  { knx="0/2/8,0/2/9" }
+Rollershutter Blind_tv_left "TV좌측"  { knx="0/2/10,0/2/11" }
+Rollershutter Blind_left "Left Blind [%s]"  {knx="0/2/0, 0/2/1"}
+Rollershutter Blind_Right_Top "Right Top Blind [%s]"  {knx="0/2/2,0/2/3"}
+Rollershutter Blind_Mid "Mid Blind [%s]"  {knx="0/2/4,0/2/5"}
+Rollershutter Awning_red "어닝_Red" (Awning_ye) {knx="0/2/12,0/2/13" }
+
+
+
+/*  blind gpio  */
+
+Switch blind_gpio_down "gpio down" {gpio="pin:17 activelow:yes"}
+Switch blind_gpio_up "gpio up"  {gpio="pin:27 activelow:yes"}
+Switch blind_gpio_stop "gpio stop"  {gpio="pin:18 activelow:yes"}
+
+Rollershutter awning_gpio "어닝 조절" (Awning_ye)
+/*Rollershutter blind_gpio_slat "슬랫조절" (Awning_ye)*/
+
+Rollershutter Blind_left_020 "블라인드020 [%s]" {knx="0/2/0"}
+Rollershutter Blind_left_021 "블라인드021 [%s]"  {knx="0/2/1"}
+
+
+/*  Astro */
+DateTime Sunrise_Time  "Sunrise [%1$tH:%1$tM]"  (Awning_ye)   {astro="planet=sun, type=rise, property=start"}
+DateTime Sunset_Time   "Sunset [%1$tH:%1$tM]"   (Awning_ye)   {astro="planet=sun, type=set, property=end"}
+Number   Azimuth        "Azimuth [%.2f]"          (Awning_ye)    {astro="planet=sun, type=position, property=azimuth"}
+Number   Elevation      "Elevation [%.2f]"            (Awning_ye)   {astro="planet=sun, type=position, property=elevation"}
+
+Switch is_sunset
+
+
+/*  weather */
+String   Condition            "Condition [%s]"         (Awning_ye)                             {weather="locationId=IoTGallery, type=condition, property=text"}
+String   Condition_ID         "Condition id [%s]"   (Awning_ye)  {weather="locationId=IoTGallery, type=condition, property=id"}
+Number   Weather_Temperature  "Outside Temperature [%.0f] °C" <temperature>  (Awning_ye) { weather="locationId=IoTGallery, type=temperature, property=current" }
+
+Number   Temp_Feel            "Temperature feel [%.2f °C]" (Awning_ye)  {weather="locationId=IoTGallery, type=temperature, property=feel"}
+Number   Rain_today           "Rain today [%.2f mm/h]"  (Awning_ye) {weather="locationId=IoTGallery, forecast=0, type=precipitation, property=rain"}
+Number   Rain_tomorrow        "Rain tomorrw [%.2f mm/h]"  (Awning_ye) {weather="locationId=IoTGallery, forecast=1, type=precipitation, property=rain"}
+Number   Snow_today           "Snow today [%.2f mm/h]"   {weather="locationId=IoTGallery, forecast=0, type=precipitation, property=snow"}
+Number   Wind_Speed           "Windspeed [%.2f mps]"   (Awning_ye) {weather="locationId=IoTGallery, type=wind, property=speed, unit=mps"}
+
+
+
+
+
+/*  sonos */
+Switch Sonos3_playpause "Sonos Bar" (Music_ye) {sonos="[ON:RINCON_5CAAFD0AF9DC01400:play],[OFF:RINCON_5CAAFD0AF9DC01400:pause]"}
+Dimmer VolumeSonos "Sonos Volume" (Music_ye) {sonos="[RINCON_5CAAFD0AF9DC01400:volume]"}

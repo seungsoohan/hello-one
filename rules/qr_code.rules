@@ -1,0 +1,323 @@
+import org.joda.time.*
+import org.openhab.model.script.actions.Timer
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.openhab.core.library.types.HSBType
+import java.util.Date
+import java.util.Calendar
+import org.joda.time.*
+
+
+rule "lifx change color with color picker"
+  when Item Color_lifx received command
+    then
+      var String lifxurl_all = "https://api.lifx.com/v1/lights/all/state"
+      var String lifxtoken = "c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71"
+      var HSBType intCol = (Color_lifx.state as HSBType)
+      var int hue_value = intCol.hue.intValue
+      var String commandString_final = "curl@@-XPUT@@" + lifxurl_all + "@@-H@@Authorization: Bearer " + lifxtoken + "@@-d@@" + "power=on&brightness=" + (intCol.value.floatValue/100.0).toString + "&color=saturation:" +(intCol.saturation.floatValue/100.0).toString + " hue:"  + intCol.hue.intValue.toString
+
+      executeCommandLine(commandString_final)
+end
+
+
+rule "lifx police light"
+  when Item ye_police_light received command ON
+then
+  var String lifxurl_all = "https://api.lifx.com/v1/lights/all/effects/pulse"
+  var String lifxtoken = "c4697a318b1e65b8012c43383600975821f33ee90ee399273aaa1788fa094d71"
+  var String commandString = "curl@@-XPOST@@" + lifxurl_all + "@@-H@@Authorization: Bearer " + lifxtoken + "@@-d@@" + "period=1&cycles=10&color=red&from_color=blue"
+
+  executeCommandLine(commandString)
+end
+
+
+
+rule "awning"
+/*  when Item Azimuth changed*/
+  when Time cron "0 0/5 * * * ?"
+/*    when Item test_arn received command*/
+
+    then
+      var int azimuth_cur = (Azimuth.state as DecimalType).intValue
+      var int my_position = 195     /* 창문의 방향을 입력 */
+      var int azimuth_set = (azimu_set.state as DecimalType).intValue
+      var int awning_start = my_position - azimuth_set
+      var int awning_end = my_position + azimuth_set
+      var boolean is_roop = false
+
+
+      if(awning_start < 0){
+        awning_start = my_position + 360 - azimuth_set
+        is_roop = true
+      }
+
+      if(awning_end > 360){
+        awning_end = my_position - 360 + azimuth_set
+        is_roop = true
+      }
+
+    /*  var String weather_id = Condition_ID.state*/
+
+      var int wind_value = (Wind_Speed.state as DecimalType).intValue
+      var boolean rain_warning = false
+      var boolean snow_warning = false
+      var boolean wind_warning = false
+      var boolean sun_visible = false
+      var boolean total_warning = false
+      var int day_value = (awning_day.state as DecimalType).intValue
+      var int windmode_value = (awning_windmode.state as DecimalType).intValue
+      var DateTime daystart = new DateTime((Sunrise_Time.state as DateTimeType).calendar.timeInMillis)
+      var DateTime dayend = new DateTime((Sunset_Time.state as DateTimeType).calendar.timeInMillis)
+
+
+
+
+
+/*for debug*/
+
+
+
+
+
+/*test*/
+
+
+      if(Condition_ID.state=="1" || Condition_ID.state=="3" || Condition_ID.state=="4" || Condition_ID.state=="5" || Condition_ID.state=="6" ||
+         Condition_ID.state=="10" || Condition_ID.state=="11" || Condition_ID.state=="12" || Condition_ID.state=="17" || Condition_ID.state=="35" || Condition_ID.state=="37" || Condition_ID.state=="38" ||
+         Condition_ID.state=="39" || Condition_ID.state=="40" || Condition_ID.state=="45" || Condition_ID.state=="47")
+                {rain_warning = true}
+
+      if(Condition_ID.state=="7" || Condition_ID.state=="13" || Condition_ID.state=="14" || Condition_ID.state=="15" || Condition_ID.state=="16" ||
+          Condition_ID.state=="18" || Condition_ID.state=="41" || Condition_ID.state=="42" || Condition_ID.state=="43" || Condition_ID.state=="46")
+                {snow_warning = true}
+
+      if(windmode_value==0)                     {wind_warning = false}
+      if(wind_value>8 && windmode_value==1)     {wind_warning = true}
+      if(wind_value>10 && windmode_value==2)     {wind_warning = true}
+      if(wind_value>12 && windmode_value==3)    {wind_warning = true}
+
+
+
+/*for test*/
+  /*  rain_warning = true
+    snow_warning = true
+    wind_warning = true*/
+/*for test*/
+
+
+
+    var boolean is_daytime = false
+    if(now.isAfter(daystart) && now.isBefore(dayend)){
+      is_daytime = true
+    }
+    else{
+      is_daytime = false
+    }
+
+
+/*  테스트 완료
+if(day_value==1){
+  sendCommand(arn, DOWN)
+}
+else if(day_value==2){
+  sendCommand(arn, UP)
+}
+*/
+
+
+
+
+      if(awning_rainmode.state==ON && rain_warning){
+              /*sendCommand(awning_gpio, UP)*/
+              sendCommand(Awning_red, UP)
+      }
+      else if(awning_snowmode.state==ON && snow_warning){
+              /*sendCommand(awning_gpio, UP)*/
+              sendCommand(Awning_red, UP)
+      }
+      else if(wind_warning && !(windmode_value==0)){
+              /*sendCommand(awning_gpio, UP)*/
+              sendCommand(Awning_red, UP)
+      }
+
+
+/*is_daytime=false      해가 졌을때 테스트*/
+
+      if(day_value==1){
+          if(is_daytime){
+            /*sendCommand(awning_gpio, DOWN)*/
+            sendCommand(Awning_red, DOWN)
+          }
+          else{
+            /*sendCommand(awning_gpio, UP)*/
+            sendCommand(Awning_red, UP)
+          }
+      }
+      else
+      if(day_value==2){
+        if(is_daytime){
+          if(is_roop){
+            if(awning_start<azimuth_cur || azimuth_cur<awning_end ){
+              /*sendCommand(awning_gpio, DOWN)*/
+              sendCommand(Awning_red, DOWN)
+            }
+            else{
+              /*sendCommand(awning_gpio, UP)*/
+              sendCommand(Awning_red, UP)
+            }
+          }
+          else{
+            if(awning_start<azimuth_cur && azimuth_cur<awning_end){
+              /*sendCommand(awning_gpio, DOWN)*/
+              sendCommand(Awning_red, DOWN)
+            }
+            else{
+              /*sendCommand(awning_gpio, UP)*/
+              sendCommand(Awning_red, UP)
+            }
+          }
+        }
+       else{
+        /*sendCommand(awning_gpio, UP)*/
+        sendCommand(Awning_red, UP)
+       }
+
+
+      }
+      else{
+        return false
+      }
+
+
+
+end
+
+
+/*
+
+rule "blind_gpio_up"
+  when Item awning_gpio received command UP
+then
+if(blind_gpio_down.state==ON){
+    sendCommand(blind_gpio_up, ON)
+    Thread::sleep(200)
+    sendCommand(blind_gpio_down, OFF)
+    sendCommand(blind_gpio_up, OFF)
+    Thread::sleep(200)
+    sendCommand(blind_gpio_up, ON)
+}
+
+  sendCommand(blind_gpio_up, ON)
+  sendCommand(blind_gpio_down, OFF)
+
+end
+
+rule "blind_gpio_down"
+  when Item awning_gpio received command DOWN
+then
+  if(blind_gpio_up.state==ON){
+      sendCommand(blind_gpio_down, ON)
+      Thread::sleep(200)
+      sendCommand(blind_gpio_up, OFF)
+      sendCommand(blind_gpio_down, OFF)
+      Thread::sleep(200)
+      sendCommand(blind_gpio_down, ON)
+  }
+
+  sendCommand(blind_gpio_down, ON)
+  sendCommand(blind_gpio_up, OFF)
+end
+
+rule "blind_gpio_stop"
+  when Item awning_gpio received command STOP
+then
+
+if(blind_gpio_up.state == ON){
+sendCommand(blind_gpio_down, ON)
+}
+
+else if(blind_gpio_down.state == ON){
+sendCommand(blind_gpio_up, ON)
+}
+  Thread::sleep(500)
+  sendCommand(blind_gpio_up, OFF)
+  sendCommand(blind_gpio_down, OFF)
+end
+
+gpio미사용으로 주석처리
+*/
+
+
+
+rule "Blind Slat Auto Control"
+/*whenItem Azimuth  changed*/
+  when Time cron "0 0/4 * * * ?"
+/*  Item is_sunset changed from OFF to ON*/
+/*    when Item test_arn received command*/
+
+    then
+
+
+          var int azimuth = (Azimuth.state as DecimalType).intValue
+          var int elevation = (Elevation.state as DecimalType).intValue
+          var int my_position = 195
+          var int awning_start = my_position - 90
+          var int awning_end = my_position + 90
+          var int awning_start_pre = my_position - 95
+
+      /*    var int rain_value = (Rain_today.state as DecimalType).intValue
+          var int snow_value = (Snow_today.state as DecimalType).intValue
+          var int wind_value = (Wind_Speed.state as DecimalType).intValue   임시로안씀*/
+
+          var boolean wind_warning = false
+          var boolean sun_visible = false
+          var boolean total_warning = false
+
+
+
+
+        /*  if(wind_value > 10){
+              rain_warning = true}             임시로 안씀*/
+
+          if(awning_start<azimuth && azimuth<awning_end){
+              sun_visible = true}
+          else {sun_visible = false}
+
+      /*    if(Condition_ID.state == "28"){
+              sun_visible = false}    구름낀 상황 인식률떨어져 샤용안함*/
+
+        /*  if(sun_visible ){
+          sendCommand(Blind_left, DOWN)
+          Thread::sleep(20000)}*/
+
+          if(sun_visible && elevation<30)
+            {callScript("bl_reset")}
+
+          else if(sun_visible && elevation<45)
+            {callScript("bl_reset")
+            createTimer(now.plusSeconds(2)) [|
+              callScript("bl_down")
+              ]}
+
+          else if(sun_visible && elevation<65){
+          callScript("bl_reset")
+          createTimer(now.plusSeconds(2)) [|
+            callScript("bl_down")
+            callScript("bl_down")
+            ]}
+
+          else if(sun_visible && elevation<80){
+          callScript("bl_reset")
+          createTimer(now.plusSeconds(2)) [|
+            callScript("bl_down")
+            callScript("bl_down")
+            callScript("bl_down")
+          ]}
+
+          else {
+          sendCommand(Blind_left, UP)
+        }
+
+end

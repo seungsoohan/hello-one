@@ -1,0 +1,7 @@
+/* Sonos Stue */
+String Sonos_Stue_Currenttrack "Aktuelt nummer: [%s]"	(Sonos) {sonos="[RINCON_5CAAFD51A67E01400:currenttrack]", autoupdate="false"}
+Switch Sonos_Stue_Play	"Play/Pause" (Sonos) {sonos="[ON:RINCON_5CAAFD51A67E01400:play],[OFF:RINCON_5CAAFD51A67E01400:pause]"}
+Switch Sonos_Stue_next "Næste" (Sonos) {sonos="[ON:RINCON_5CAAFD51A67E01400:next]"}
+Switch Sonos_Stue_Previous "Forrige" (Sonos) {sonos="[ON:RINCON_5CAAFD51A67E01400:previous]"}
+Dimmer Sonos_Stue_Volume "Volume" (Sonos) {sonos="[RINCON_5CAAFD51A67E01400:volume]"}
+String Sonos_Stue_playradio "Radio"	(Sonos)	{Sonos="[RINCON_5CAAFD51A67E01400:radio]" }

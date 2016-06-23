@@ -1,0 +1,61 @@
+sitemap Inthecore label="One Scape"
+{
+    Frame label="OneScape Master"
+
+
+    {
+      Group item=Yellow label="노란코끼리" icon="noko_icon"
+      Group item=Preference label="설정" icon="settings"{
+        /*Switch item=awning_automode label="전체감지"*/
+
+        Switch item=awning_rainmode label="비 감지" icon="detect_one"
+        Switch item=awning_snowmode label="눈 감지" icon="detect_one"
+        Selection item=awning_windmode label="바람 감지" mappings=[0="Off", 1="8m/s이상", 2="10m/s이상", 3="12m/s이상"] icon="detect_one"
+        Selection item=awning_day label="태양감지모드" mappings=[0="Off", 1="주간모드", 2="태양 추적모드"] icon="detect_one"
+
+
+        Setpoint item=azimu_set minValue=10 maxValue=90 step=10 label="태양감지각 [%d˚]" icon="clock"
+      }
+    }
+
+    Frame label="Light"{
+      Group item=All_light label="모든 조명" icon="bulb_one"
+
+
+
+      Switch item=ye_switch label="스위치"  icon="switch_one"
+      Colorpicker item=Color_lifx label="색상" icon="color_one"
+
+      Switch item=hue_ff_1
+      Switch item=hue_ff_2
+      Switch item=hue_ff_3
+/*test*/
+
+      Switch item=test_arn label="test_arn" mappings=[ON="On", OFF="Off"] icon="switch_one"
+
+
+
+
+    }
+
+    Frame label="Music"{
+      Switch item=Sonos5_playpause label="Sonos" mappings=[ON="재생", OFF="정지"] icon="sonos_one"
+      Slider item=VolumeSonos label="볼륨" icon="speaker_one"
+
+    }
+
+    Frame label="Awning"{
+      /*Switch item=awning_gpio label="어닝조절" mappings=[UP="접기", STOP="정지", DOWN="펴기"] icon="awning_one"*/
+      Switch item=Awning_red label="어닝  조절" mappings=[UP="접기", STOP="정지", DOWN="펴기"] icon="awning_one"
+
+    }
+
+    Frame label="Blind"{
+      Switch item=Blind_left label="왼쪽" mappings=[UP="올리기", STOP="정지", DOWN="내리기"] icon="awning_one"
+      Switch item=Blind_Mid label="가운데" mappings=[UP="올리기", STOP="정지", DOWN="내리기"] icon="awning_one"
+      Switch item=Blind_Right_Top label="오른쪽 위" mappings=[UP="올리기", STOP="정지", DOWN="내리기"] icon="awning_one"
+      Switch item=Blind_right label="오른쪽" mappings=[UP="올리기", STOP="정지", DOWN="내리기"] icon="awning_one"
+      Switch item=Blind_tv_left label="TV좌측" mappings=[UP="올리기", STOP="정지", DOWN="내리기"] icon="awning_one"
+
+
+    }

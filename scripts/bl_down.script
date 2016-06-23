@@ -1,0 +1,5 @@
+callScript("bl_all_down")
+
+Thread::sleep(150)
+
+callScript("bl_all_stop")

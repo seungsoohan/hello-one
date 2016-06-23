@@ -1,0 +1,27 @@
+sitemap sonos label="sonos"
+sitemap default label="Plejlen 61"
+{
+
+						/*Grupper i mappen Huset*/
+
+						/*Slut på mappen Huset*/
+
+						/*Gruppe */
+Frame label="Musik" {
+		Text label="Musik" icon="firstfloor" {
+
+
+					/*Stue Start*/
+		Frame label="Sonos Stue" {
+		Text item=Sonos_Stue_Currenttrack	label="Aktuelt nummer [%s]" 														icon="video"
+		Switch item=Sonos_Stue_Play	 		label="Afspil/Pause" 						mappings=[ON="Afspil", OFF="Pause"] 	icon="video"
+		Switch item=Sonos_Stue_next			label="Næste" 								mappings=[ON="Næste"]
+		Switch item=Sonos_Stue_Previous 	label="Forrige" 							mappings=[ON="Forringe"]
+		Slider item=Sonos_Stue_Volume  		label="Volume"
+		Selection item=Sonos_Stue_playradio 											mappings=[1=Radioviborg, 2=JoeFM, 3=StuBru]
+							}
+					/*Stue - Slut */
+}
+
+}
+}
